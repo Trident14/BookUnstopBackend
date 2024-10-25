@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
-
-const SeatsMapSchema = new mongoose.Schema({
-    row: { type: Number, required: true },
-    availableSeats: { type: Number, required: true }
-});
-
-module.exports = mongoose.model('SeatsMap', SeatsMapSchema);
+const seatMapSchema = new mongoose.Schema({
+    rows: {
+      type: [[String]], // Array of arrays of strings
+      default: Array.from({ length: 12 }, (_, index) => Array(index === 11 ? 3 : 7).fill(null))
+    }
+  });
+  
+  const SeatMap = mongoose.model('SeatMap', seatMapSchema);
+  
+  module.exports = SeatMap;

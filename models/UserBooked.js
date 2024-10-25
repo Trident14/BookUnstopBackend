@@ -5,4 +5,4 @@ const userBookedSchema = new mongoose.Schema({
     seats: [{ row: Number, seat: Number }] // Array of seat objects with row and seat number
 });
 
-module.exports = mongoose.model('UserBooked', userBookedSchema);
+module.exports = mongoose.model('UserBookings', userBookedSchema);
