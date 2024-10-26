@@ -161,10 +161,7 @@ const bookSeats = async (req, res) => {
 
     let bookedSeats = [];
     let remainingSeats = numberOfSeats;
-    
-     // Get last available index from cache
-
-   
+  
 
     // Ensure SeatsMap is initialized
     await initializeSeatsMap();
