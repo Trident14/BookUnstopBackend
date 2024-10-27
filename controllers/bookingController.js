@@ -1,7 +1,7 @@
 const UserBooked = require('../models/UserBooked');
 const SeatMap = require('../models/SeatsMap');
 const { inMemoryCache } = require('./cacheController');
-const { saveCacheToMongoOnShutdown } = require('../controllers/cacheController');
+const {loadCacheFromMongo,saveCacheToMongoOnShutdown } = require('../controllers/cacheController');
 
 // Function to initialize seat map if it doesn't exist
 const initializeSeatsMap = async () => {
@@ -18,7 +18,8 @@ const initializeSeatsMap = async () => {
 const bookSeats = async (req, res) => {
     const { username, numberOfSeats } = req.body;
     console.log("Received request:", req.body);
-  
+    await loadCacheFromMongo();
+    
     // Validate the number of seats to be booked
     if (numberOfSeats < 1 || numberOfSeats > 7) {
         return res.status(400).send("You can book a maximum of 7 seats.");
