@@ -4,19 +4,21 @@ const connectMongo = require('./config/db');
 const bookingRoutes = require('./routes/bookingRoutes'); 
 const SeatMap = require('./models/SeatsMap');
 const { saveCacheToMongoOnShutdown } = require('./controllers/cacheController');
+require("dotenv").config();
 
 const app = express();
-require("dotenv").config();
 const PORT = process.env.PORT ;
+// Connect to MongoDB
 connectMongo();
 
+// Middleware
 app.use(cors()); 
 app.use(express.json());
 
-//API to book seat
+// API to book seat
 app.use('/api', bookingRoutes); 
 
-//API to fetch seats
+// API to fetch seats
 app.get('/seats', async (req, res) => {
     const seatMap = await SeatMap.findOne({});
     if (seatMap) {
@@ -30,35 +32,27 @@ app.get('/seats', async (req, res) => {
             });
         }).flat(); 
 
-        const groupBySeat = formattedSeats.reduce((acc,curSeat)=>{
-            const {row,seat,booked} = curSeat;
-            if(!acc[row]){
-                acc[row]=[];
+        const groupBySeat = formattedSeats.reduce((acc, curSeat) => {
+            const { row, seat, booked } = curSeat;
+            if (!acc[row]) {
+                acc[row] = [];
             }
-            acc[row].push({seat,booked});
+            acc[row].push({ seat, booked });
             return acc;
-        },{});
+        }, {});
 
         return res.json(groupBySeat);
     }
     return res.status(404).send("Seat map not found.");
 });
 
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
 
-const startServer = async () => {
-    try {
-        // Handle server shutdown
-        process.on('SIGINT', async () => {
-            await saveCacheToMongoOnShutdown(); // Save cache to MongoDB
-            process.exit(0);
-        });
-
-        app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
-        });
-    } catch (error) {
-        console.error("Error starting server:", error);
-    }
-};
-
-startServer();
+// Handle server shutdown
+process.on('SIGINT', async () => {
+    await saveCacheToMongoOnShutdown(); // Save cache to MongoDB
+    process.exit(0);
+});

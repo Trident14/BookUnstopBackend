@@ -16,6 +16,10 @@ const initializeSeatsMap = async () => {
 //Function to book seats
 const bookSeats = async (req, res) => {
     const { username, numberOfSeats } = req.body;
+    console.log("Received request:", req.body);
+    debugger;
+    
+
 
     // Validate the number of seats to be booked
     if (numberOfSeats < 1 || numberOfSeats > 7) {
