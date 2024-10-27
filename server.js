@@ -1,7 +1,7 @@
 const express = require('express');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors'); 
 const connectMongo = require('./config/db');
-const bookingRoutes = require('./routes/bookingRoutes'); // Correctly import the routes
+const bookingRoutes = require('./routes/bookingRoutes'); 
 const SeatMap = require('./models/SeatsMap');
 const { saveCacheToMongoOnShutdown } = require('./controllers/cacheController');
 
@@ -10,20 +10,22 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 connectMongo();
 
-app.use(cors()); // Use CORS middleware to allow cross-origin requests
+app.use(cors()); 
 app.use(express.json());
 
-app.use('/api', bookingRoutes); // Register the booking routes
+//API to book seat
+app.use('/api', bookingRoutes); 
 
+//API to fetch seats
 app.get('/seats', async (req, res) => {
     const seatMap = await SeatMap.findOne({});
     if (seatMap) {
         const formattedSeats = seatMap.rows.map((row, rowIndex) => {
             return row.map((seat, seatIndex) => {
                 return {
-                    row: rowIndex + 1, // Convert to 1-based index
-                    seat: seatIndex + 1, // Convert to 1-based index
-                    booked: seat !== null // Check if the seat is booked
+                    row: rowIndex + 1, 
+                    seat: seatIndex + 1, 
+                    booked: seat !== null 
                 };
             });
         }).flat(); 
@@ -41,7 +43,6 @@ app.get('/seats', async (req, res) => {
     }
     return res.status(404).send("Seat map not found.");
 });
-
 
 
 const startServer = async () => {
