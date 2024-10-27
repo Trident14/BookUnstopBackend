@@ -1,6 +1,7 @@
 const UserBooked = require('../models/UserBooked');
 const SeatMap = require('../models/SeatsMap');
 const { inMemoryCache } = require('./cacheController');
+const { saveCacheToMongoOnShutdown } = require('./controllers/cacheController');
 
 // Function to initialize seat map if it doesn't exist
 const initializeSeatsMap = async () => {
@@ -71,6 +72,7 @@ const bookSeats = async (req, res) => {
     // Save the booking in UserBooked
     if (bookedSeats.length > 0) {
         await UserBooked.create({ username, seats: bookedSeats });
+        await saveCacheToMongoOnShutdown();
         return res.status(200).send({
             message: "Seats booked successfully",
             seats: bookedSeats
