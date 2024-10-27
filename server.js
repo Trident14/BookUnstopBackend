@@ -7,7 +7,7 @@ const { saveCacheToMongoOnShutdown } = require('./controllers/cacheController');
 
 const app = express();
 require("dotenv").config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ;
 connectMongo();
 
 app.use(cors()); 
