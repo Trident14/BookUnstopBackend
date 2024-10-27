@@ -1,7 +1,7 @@
 const UserBooked = require('../models/UserBooked');
 const SeatMap = require('../models/SeatsMap');
 const { inMemoryCache } = require('./cacheController');
-const { saveCacheToMongoOnShutdown } = require('./controllers/cacheController');
+const { saveCacheToMongoOnShutdown } = require('../controllers/cacheController');
 
 // Function to initialize seat map if it doesn't exist
 const initializeSeatsMap = async () => {
